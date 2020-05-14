@@ -1,5 +1,7 @@
 ## websocket-clients
 
+[![Build](https://github.com/tumakha/websocket-clients/workflows/websocket-clients/badge.svg)](https://github.com/tumakha/websocket-clients/actions)
+
 WebSocket clients performance test
 
 #### Prerequisites
