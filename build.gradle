@@ -1,0 +1,35 @@
+subprojects {
+	apply plugin: 'java'
+
+	group = 'com.tumakha'
+	version = '0.1'
+
+	sourceCompatibility = 13
+	targetCompatibility = 13
+
+	buildscript {
+		ext {
+			lombokVersion = '1.18.12'
+		}
+
+		repositories {
+			mavenCentral()
+		}
+
+		configurations {
+			compileOnly {
+				extendsFrom annotationProcessor
+			}
+		}
+	}
+
+	repositories {
+		mavenCentral()
+	}
+
+	dependencies {
+		compileOnly "org.projectlombok:lombok:${lombokVersion}"
+		annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
+	}
+
+}

@@ -1,0 +1,8 @@
+
+jar {
+    archiveFileName = 'websocket-server.jar'
+}
+
+dependencies {
+    testImplementation 'junit:junit:4.13'
+}
