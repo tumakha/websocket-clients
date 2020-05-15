@@ -17,7 +17,13 @@ public class WebSocketFrameHandler extends SimpleChannelInboundHandler<WebSocket
   @Override
   public void channelActive(ChannelHandlerContext ctx) throws Exception {
     super.channelActive(ctx);
-    System.out.println("New channel " + ctx.channel().id());
+    System.out.println("Open channel " + ctx.channel());
+  }
+
+  @Override
+  public void channelInactive(ChannelHandlerContext ctx) throws Exception {
+    super.channelInactive(ctx);
+    System.out.println("Close channel " + ctx.channel());
   }
 
   @Override

@@ -1,6 +1,13 @@
 
 jar {
     archiveFileName = 'websocket-server.jar'
+    manifest {
+        attributes "Main-Class": "websocket.server.WebSocketServer"
+    }
+    from {
+        configurations.runtimeClasspath.findAll { it.name.endsWith('jar') }
+                .collect { zipTree(it) }  // create fat jar
+    }
 }
 
 dependencies {
