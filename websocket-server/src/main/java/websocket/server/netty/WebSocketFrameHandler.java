@@ -8,7 +8,7 @@ import io.netty.handler.codec.http.websocketx.WebSocketFrame;
 import java.util.Locale;
 
 /**
- * Echoes uppercase content of text frames.
+ * Read socket frames.
  *
  * @author Yuriy Tumakha
  */
