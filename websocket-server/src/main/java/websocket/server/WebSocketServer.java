@@ -10,44 +10,57 @@ import io.netty.handler.logging.LoggingHandler;
 import io.netty.handler.ssl.SslContext;
 import io.netty.handler.ssl.SslContextBuilder;
 import io.netty.handler.ssl.util.SelfSignedCertificate;
+import lombok.Value;
 import websocket.server.netty.WebSocketServerInitializer;
+
+import javax.net.ssl.SSLException;
+import java.io.Closeable;
+import java.security.cert.CertificateException;
 
 /**
  * @author Yuriy Tumakha
  */
-public final class WebSocketServer {
+@Value
+public class WebSocketServer implements Closeable {
 
   private static final boolean ENABLE_SSL = true;
-  private static final int HTTP_PORT = 8880;
-  private static final int HTTPS_PORT = 8883;
-  private static final int PORT = ENABLE_SSL ? HTTPS_PORT : HTTP_PORT;
+  private static final int PORT = 8883;
+
+  boolean ssl;
+  int port;
+  EventLoopGroup bossGroup = new NioEventLoopGroup(1);
+  EventLoopGroup workerGroup = new NioEventLoopGroup();
+
 
   public static void main(String[] args) throws Exception {
-    // Configure SSL.
-    SslContext sslCtx = null;
-    if (ENABLE_SSL) {
+    try (WebSocketServer server = new WebSocketServer(ENABLE_SSL, PORT)) {
+      server.startChannel().closeFuture().sync();
+    }
+  }
+
+  public Channel startChannel() throws CertificateException, SSLException, InterruptedException {
+    ServerBootstrap b = new ServerBootstrap();
+    b.group(bossGroup, workerGroup)
+        .channel(NioServerSocketChannel.class)
+        .handler(new LoggingHandler(LogLevel.INFO))
+        .childHandler(new WebSocketServerInitializer(createSslContext()));
+
+    System.out.println("Open your web browser and navigate to " + (ssl ? "https" : "http") + "://127.0.0.1:" + port);
+    return b.bind(port).sync().channel();
+  }
+
+  private SslContext createSslContext() throws CertificateException, SSLException {
+    if (ssl) {
       SelfSignedCertificate ssc = new SelfSignedCertificate();
-      sslCtx = SslContextBuilder.forServer(ssc.certificate(), ssc.privateKey()).build();
+      return SslContextBuilder.forServer(ssc.certificate(), ssc.privateKey()).build();
     }
+    return null;
+  }
 
-    EventLoopGroup bossGroup = new NioEventLoopGroup(1);
-    EventLoopGroup workerGroup = new NioEventLoopGroup();
-    try {
-      ServerBootstrap b = new ServerBootstrap();
-      b.group(bossGroup, workerGroup)
-          .channel(NioServerSocketChannel.class)
-          .handler(new LoggingHandler(LogLevel.INFO))
-          .childHandler(new WebSocketServerInitializer(sslCtx));
-
-      Channel ch = b.bind(PORT).sync().channel();
-      System.out.println("Open your web browser and navigate to " +
-          (ENABLE_SSL ? "https" : "http") + "://127.0.0.1:" + PORT + '/');
-
-      ch.closeFuture().sync();
-    } finally {
-      bossGroup.shutdownGracefully();
-      workerGroup.shutdownGracefully();
-    }
+  @Override
+  public void close() {
+    bossGroup.shutdownGracefully();
+    workerGroup.shutdownGracefully();
   }
 
 }
