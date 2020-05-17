@@ -7,6 +7,8 @@ import websocket.client.WebSocketClient;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static java.lang.String.format;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.core.IsEqual.equalTo;
 
 /**
  * @author Yuriy Tumakha
@@ -28,11 +30,11 @@ public class WebSocketServerTest {
       String endpoint = server.getEndpoint();
       System.out.println("WebSocket: " + endpoint);
 
-      final WebSocketClient client = new WebSocketClient(endpoint, msg -> {
+      WebSocketClient client = new WebSocketClient(endpoint, msg -> {
+        //assertThat(msg.getId(), equalTo(prevMessageId.incrementAndGet()));
         System.out.println(msg);
       });
       client.sendMessage(format("{\"request-messages\": %d}", MESSAGES_COUNT));
-
       client.closeChannel();
 
       // verify test messages
