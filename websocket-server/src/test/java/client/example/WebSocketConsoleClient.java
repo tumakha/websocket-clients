@@ -36,7 +36,7 @@ import java.net.URI;
  * You don't have to specify any arguments if you want to connect to the example WebSocket server,
  * as this is the default.
  */
-public final class WebSocketClient {
+public final class WebSocketConsoleClient {
 
   static final String URL = System.getProperty("url", "wss://127.0.0.1:8883/websocket");
 
@@ -76,8 +76,8 @@ public final class WebSocketClient {
       // Connect with V13 (RFC 6455 aka HyBi-17). You can change it to V08 or V00.
       // If you change it to V00, ping is not supported and remember to change
       // HttpResponseDecoder to WebSocketHttpResponseDecoder in the pipeline.
-      final WebSocketClientHandler handler =
-          new WebSocketClientHandler(
+      final ChannelReader handler =
+          new ChannelReader(
               WebSocketClientHandshakerFactory.newHandshaker(
                   uri, WebSocketVersion.V13, null, true, new DefaultHttpHeaders()));
 

@@ -5,12 +5,12 @@ import io.netty.handler.codec.http.FullHttpResponse;
 import io.netty.handler.codec.http.websocketx.*;
 import io.netty.util.CharsetUtil;
 
-public class WebSocketClientHandler extends SimpleChannelInboundHandler<Object> {
+public class ChannelReader extends SimpleChannelInboundHandler<Object> {
 
   private final WebSocketClientHandshaker handshaker;
   private ChannelPromise handshakeFuture;
 
-  public WebSocketClientHandler(WebSocketClientHandshaker handshaker) {
+  public ChannelReader(WebSocketClientHandshaker handshaker) {
     this.handshaker = handshaker;
   }
 
