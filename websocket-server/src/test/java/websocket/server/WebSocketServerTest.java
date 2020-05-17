@@ -1,6 +1,12 @@
 package websocket.server;
 
+import io.netty.channel.Channel;
 import org.junit.Test;
+import websocket.client.WebSocketClient;
+
+import java.util.concurrent.atomic.AtomicInteger;
+
+import static java.lang.String.format;
 
 /**
  * @author Yuriy Tumakha
@@ -9,13 +15,28 @@ public class WebSocketServerTest {
 
   private static final boolean ENABLE_SSL = true;
   private static final int TEST_PORT = 8383;
+  private static final int MESSAGES_COUNT = 10;
 
   @Test
   public void testServer() throws Exception {
-    try (WebSocketServer server = new WebSocketServer(ENABLE_SSL, TEST_PORT)) {
-      server.startChannel();
+    AtomicInteger prevMessageId = new AtomicInteger();
+    long[] times = new long[MESSAGES_COUNT];
 
-      System.out.println(server.getPort());
+    try (WebSocketServer server = new WebSocketServer(ENABLE_SSL, TEST_PORT)) {
+      Channel serverChannel = server.startChannel();
+
+      String endpoint = server.getEndpoint();
+      System.out.println("WebSocket: " + endpoint);
+
+      final WebSocketClient client = new WebSocketClient(endpoint, msg -> {
+        System.out.println(msg);
+      });
+      client.sendMessage(format("{\"request-messages\": %d}", MESSAGES_COUNT));
+
+      client.closeChannel();
+
+      // verify test messages
+
     }
   }
 

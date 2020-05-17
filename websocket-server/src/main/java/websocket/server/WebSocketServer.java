@@ -52,7 +52,7 @@ public class WebSocketServer implements Closeable {
   }
 
   public String getEndpoint() {
-    return String.format("%s://%s:%d%s", (ssl ? "wss" : "ws"), HOST, PORT, WEBSOCKET_PATH);
+    return String.format("%s://%s:%d%s", (ssl ? "wss" : "ws"), HOST, port, WEBSOCKET_PATH);
   }
 
   private SslContext createSslContext() throws CertificateException, SSLException {
