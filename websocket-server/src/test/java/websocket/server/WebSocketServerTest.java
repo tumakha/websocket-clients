@@ -35,19 +35,20 @@ public class WebSocketServerTest {
 
       try (WebSocketClient client = new WebSocketClient(endpoint, messages::add)) {
         client.sendMessage(new RequestMsg(MESSAGES_COUNT));
-        client.closeChannel();
-
-        // verify test messages
-        assertThat(messages, hasSize(MESSAGES_COUNT));
-
-        final AtomicInteger prevMessageId = new AtomicInteger();
-        messages.forEach(msg -> assertThat(msg.getId(), equalTo(prevMessageId.incrementAndGet())));
-
-        messages.stream().map(ResponseMsg::getTime).reduce((t1, t2) -> {
-          assertThat(t2 - t1, lessThan((long) 1e9));
-          return t2;
-        });
+        client.waitSocketClosed();
       }
+
+      // verify test messages
+      assertThat(messages, hasSize(MESSAGES_COUNT));
+
+      final AtomicInteger prevMessageId = new AtomicInteger();
+      messages.forEach(msg -> assertThat(msg.getId(), equalTo(prevMessageId.incrementAndGet())));
+
+      messages.stream().map(ResponseMsg::getTime).reduce((t1, t2) -> {
+        assertThat(t2 - t1, lessThan((long) 1e9));
+        return t2;
+      });
+
     }
   }
 

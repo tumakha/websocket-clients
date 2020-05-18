@@ -11,7 +11,6 @@ import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.codec.http.DefaultHttpHeaders;
 import io.netty.handler.codec.http.HttpClientCodec;
 import io.netty.handler.codec.http.HttpObjectAggregator;
-import io.netty.handler.codec.http.websocketx.CloseWebSocketFrame;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import io.netty.handler.codec.http.websocketx.WebSocketClientHandshakerFactory;
 import io.netty.handler.codec.http.websocketx.WebSocketVersion;
@@ -108,11 +107,13 @@ public class NettyWebSocketClient implements WebSocketClient {
     channel.writeAndFlush(new TextWebSocketFrame(text));
   }
 
+  public void waitSocketClosed() throws InterruptedException {
+    channel.closeFuture().sync();
+  }
+
   @SneakyThrows
   @Override
   public void close() {
-    channel.writeAndFlush(new CloseWebSocketFrame());
-    channel.closeFuture().sync();
     group.shutdownGracefully();
   }
 

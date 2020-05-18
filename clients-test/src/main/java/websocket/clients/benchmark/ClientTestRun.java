@@ -44,6 +44,7 @@ public class ClientTestRun implements JsonSupport {
       startTestTime = System.nanoTime();
 
       wsClient.sendMessage(request);
+      wsClient.waitSocketClosed();
     }
 
     long endTestTime = System.nanoTime();

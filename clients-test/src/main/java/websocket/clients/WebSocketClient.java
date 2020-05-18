@@ -14,6 +14,8 @@ public interface WebSocketClient extends Closeable {
 
   void sendMessage(String text);
 
+  void waitSocketClosed() throws InterruptedException;
+
   default void close() {
   }
 

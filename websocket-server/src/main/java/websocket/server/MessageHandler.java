@@ -2,6 +2,7 @@ package websocket.server;
 
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
+import io.netty.handler.codec.http.websocketx.CloseWebSocketFrame;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import lombok.SneakyThrows;
 import websocket.server.json.JsonSupport;
@@ -13,7 +14,6 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static java.util.concurrent.TimeUnit.MICROSECONDS;
-import static java.util.concurrent.TimeUnit.SECONDS;
 
 /**
  * @author Yuriy Tumakha
@@ -37,11 +37,10 @@ public interface MessageHandler extends JsonSupport {
         String response = toJson(new ResponseMsg(msgId, System.nanoTime()));
         channel.writeAndFlush(new TextWebSocketFrame(response));
       } else {
+        channel.writeAndFlush(new CloseWebSocketFrame());
         scheduledExecutor.shutdown();
       }
     }, 0, 100, MICROSECONDS); // run every 100 us
-
-    scheduledExecutor.awaitTermination(10, SECONDS);
   }
 
 }

@@ -105,8 +105,7 @@ public final class WebSocketClient implements Closeable, JsonSupport {
     sendMessage(toJson(requestMsg));
   }
 
-  public void closeChannel() throws InterruptedException {
-    channel.writeAndFlush(new CloseWebSocketFrame());
+  public void waitSocketClosed() throws InterruptedException {
     channel.closeFuture().sync();
   }
 
