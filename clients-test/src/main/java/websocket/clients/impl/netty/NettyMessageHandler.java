@@ -1,24 +1,22 @@
-package websocket.client;
+package websocket.clients.impl.netty;
 
 import io.netty.channel.*;
 import io.netty.handler.codec.http.FullHttpResponse;
 import io.netty.handler.codec.http.websocketx.*;
 import io.netty.util.CharsetUtil;
-import websocket.server.json.JsonSupport;
-import websocket.server.model.ResponseMsg;
 
 import java.util.function.Consumer;
 
 /**
  * @author Yuriy Tumakha
  */
-public class MessageHandler extends SimpleChannelInboundHandler<Object> implements JsonSupport {
+public class NettyMessageHandler extends SimpleChannelInboundHandler<Object> {
 
   private final WebSocketClientHandshaker handShaker;
-  private final Consumer<ResponseMsg> messageReader;
+  private final Consumer<String> messageReader;
   private ChannelPromise handshakeFuture;
 
-  public MessageHandler(WebSocketClientHandshaker handShaker, Consumer<ResponseMsg> messageReader) {
+  public NettyMessageHandler(WebSocketClientHandshaker handShaker, Consumer<String> messageReader) {
     this.handShaker = handShaker;
     this.messageReader = messageReader;
   }
@@ -68,9 +66,7 @@ public class MessageHandler extends SimpleChannelInboundHandler<Object> implemen
     if (frame instanceof TextWebSocketFrame) {
       TextWebSocketFrame textFrame = (TextWebSocketFrame) frame;
       String text = textFrame.text();
-      System.out.println("WebSocket Client received message: " + text);
-      ResponseMsg response = fromJson(text, ResponseMsg.class);
-      messageReader.accept(response);
+      messageReader.accept(text);
     } else if (frame instanceof PongWebSocketFrame) {
       System.out.println("WebSocket Client received pong");
     } else if (frame instanceof CloseWebSocketFrame) {

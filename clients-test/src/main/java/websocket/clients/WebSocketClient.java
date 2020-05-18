@@ -1,6 +1,7 @@
 package websocket.clients;
 
 import java.io.Closeable;
+import java.util.function.Consumer;
 
 /**
  * @author Yuriy Tumakha
@@ -8,6 +9,10 @@ import java.io.Closeable;
 public interface WebSocketClient extends Closeable {
 
   String getName();
+
+  void connect(String endpoint, Consumer<String> messageReader) throws Exception;
+
+  void sendMessage(String text);
 
   default void close() {
   }
