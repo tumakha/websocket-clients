@@ -44,7 +44,7 @@ public class WebSocketServerTest {
         messages.forEach(msg -> assertThat(msg.getId(), equalTo(prevMessageId.incrementAndGet())));
 
         messages.stream().map(ResponseMsg::getTime).reduce((t1, t2) -> {
-          assertThat(t2 - t1, lessThan((long) 1e7));
+          assertThat(t2 - t1, lessThan((long) 1e9));
           return t2;
         });
       }
