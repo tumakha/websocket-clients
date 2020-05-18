@@ -8,7 +8,12 @@ import websocket.server.json.JsonSupport;
 import websocket.server.model.RequestMsg;
 import websocket.server.model.ResponseMsg;
 
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.atomic.AtomicInteger;
+
 import static java.util.concurrent.TimeUnit.MICROSECONDS;
+import static java.util.concurrent.TimeUnit.SECONDS;
 
 /**
  * @author Yuriy Tumakha
@@ -21,13 +26,22 @@ public interface MessageHandler extends JsonSupport {
     System.out.println("New Test Request: " + request);
     RequestMsg requestMsg = fromJson(request, RequestMsg.class);
 
-    Channel channel = ctx.channel();
-    int count = requestMsg.getRequestMessages();
-    for (int id = 1; id <= count; id++) {
-      String response = toJson(new ResponseMsg(id, System.nanoTime()));
-      channel.writeAndFlush(new TextWebSocketFrame(response));
-      MICROSECONDS.sleep(100); // run every 100 us
-    }
+    final ScheduledExecutorService scheduledExecutor = Executors.newScheduledThreadPool(1);
+    final AtomicInteger messageId = new AtomicInteger();
+    final int count = requestMsg.getRequestMessages();
+    final Channel channel = ctx.channel();
+
+    scheduledExecutor.scheduleAtFixedRate(() -> {
+      int msgId = messageId.incrementAndGet();
+      if (msgId <= count) {
+        String response = toJson(new ResponseMsg(msgId, System.nanoTime()));
+        channel.writeAndFlush(new TextWebSocketFrame(response));
+      } else {
+        scheduledExecutor.shutdown();
+      }
+    }, 0, 100, MICROSECONDS); // run every 100 us
+
+    scheduledExecutor.awaitTermination(10, SECONDS);
   }
 
 }
