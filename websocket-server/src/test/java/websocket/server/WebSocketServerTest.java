@@ -40,7 +40,7 @@ public class WebSocketServerTest {
         // verify test messages
         assertThat(messages, hasSize(MESSAGES_COUNT));
 
-        AtomicInteger prevMessageId = new AtomicInteger();
+        final AtomicInteger prevMessageId = new AtomicInteger();
         messages.forEach(msg -> assertThat(msg.getId(), equalTo(prevMessageId.incrementAndGet())));
 
         messages.stream().map(ResponseMsg::getTime).reduce((t1, t2) -> {
