@@ -12,7 +12,7 @@ bootJar {
 }
 
 dependencies {
-
+	implementation project(':websocket-server') // import models, json support
 
 	// Spring Boot
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
