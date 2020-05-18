@@ -43,6 +43,7 @@ public class PerformanceBenchmark implements CommandLineRunner, JsonSupport {
   private void testClient(WebSocketClient wsClient, CsvWriter reportWriter) throws Exception {
     try (wsClient) {
       System.out.println(I.incrementAndGet() + ". " + wsClient.getName());
+
       wsClient.connect(SERVER_ENDPOINT, System.out::println);
       wsClient.sendMessage(toJson(new RequestMsg(MESSAGES_COUNT)));
 
