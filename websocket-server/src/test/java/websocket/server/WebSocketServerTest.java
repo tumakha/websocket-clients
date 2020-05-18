@@ -1,14 +1,18 @@
 package websocket.server;
 
-import io.netty.channel.Channel;
 import org.junit.Test;
 import websocket.client.WebSocketClient;
+import websocket.server.model.RequestMsg;
+import websocket.server.model.ResponseMsg;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static java.lang.String.format;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.hamcrest.core.IsEqual.equalTo;
+import static org.hamcrest.number.OrderingComparison.lessThan;
 
 /**
  * @author Yuriy Tumakha
@@ -21,24 +25,29 @@ public class WebSocketServerTest {
 
   @Test
   public void testServer() throws Exception {
-    AtomicInteger prevMessageId = new AtomicInteger();
-    long[] times = new long[MESSAGES_COUNT];
+    List<ResponseMsg> messages = new ArrayList<>(MESSAGES_COUNT);
 
     try (WebSocketServer server = new WebSocketServer(ENABLE_SSL, TEST_PORT)) {
-      Channel serverChannel = server.startChannel();
+      server.startChannel();
 
       String endpoint = server.getEndpoint();
       System.out.println("WebSocket: " + endpoint);
 
-      WebSocketClient client = new WebSocketClient(endpoint, msg -> {
-        //assertThat(msg.getId(), equalTo(prevMessageId.incrementAndGet()));
-        System.out.println(msg);
-      });
-      client.sendMessage(format("{\"request-messages\": %d}", MESSAGES_COUNT));
-      client.closeChannel();
+      try (WebSocketClient client = new WebSocketClient(endpoint, messages::add)) {
+        client.sendMessage(new RequestMsg(MESSAGES_COUNT));
+        client.closeChannel();
 
-      // verify test messages
+        // verify test messages
+        assertThat(messages, hasSize(MESSAGES_COUNT));
 
+        AtomicInteger prevMessageId = new AtomicInteger();
+        messages.forEach(msg -> assertThat(msg.getId(), equalTo(prevMessageId.incrementAndGet())));
+
+        messages.stream().map(ResponseMsg::getTime).reduce((t1, t2) -> {
+          assertThat(t2 - t1, lessThan((long) 1e7));
+          return t2;
+        });
+      }
     }
   }
 

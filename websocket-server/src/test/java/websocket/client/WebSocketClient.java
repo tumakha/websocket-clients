@@ -16,6 +16,9 @@ import io.netty.handler.codec.http.websocketx.extensions.compression.WebSocketCl
 import io.netty.handler.ssl.SslContext;
 import io.netty.handler.ssl.SslContextBuilder;
 import io.netty.handler.ssl.util.InsecureTrustManagerFactory;
+import websocket.server.json.JsonSupport;
+import websocket.server.model.RequestMsg;
+import websocket.server.model.ResponseMsg;
 
 import javax.net.ssl.SSLException;
 import java.io.Closeable;
@@ -26,12 +29,12 @@ import java.util.function.Consumer;
 /**
  * @author Yuriy Tumakha
  */
-public final class WebSocketClient implements Closeable {
+public final class WebSocketClient implements Closeable, JsonSupport {
 
   private final EventLoopGroup group = new NioEventLoopGroup();
   private final Channel channel;
 
-  public WebSocketClient(String endpoint, Consumer<String> messageReader) throws URISyntaxException, InterruptedException, SSLException {
+  public WebSocketClient(String endpoint, Consumer<ResponseMsg> messageReader) throws URISyntaxException, InterruptedException, SSLException {
     URI uri = new URI(endpoint);
     String scheme = uri.getScheme();
 
@@ -96,6 +99,10 @@ public final class WebSocketClient implements Closeable {
 
   public void sendMessage(String text) {
     channel.writeAndFlush(new TextWebSocketFrame(text));
+  }
+
+  public void sendMessage(RequestMsg requestMsg) {
+    sendMessage(toJson(requestMsg));
   }
 
   public void closeChannel() throws InterruptedException {

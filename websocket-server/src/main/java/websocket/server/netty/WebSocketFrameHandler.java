@@ -4,15 +4,14 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import io.netty.handler.codec.http.websocketx.WebSocketFrame;
-
-import java.util.Locale;
+import websocket.server.MessageHandler;
 
 /**
  * Read socket frames.
  *
  * @author Yuriy Tumakha
  */
-public class WebSocketFrameHandler extends SimpleChannelInboundHandler<WebSocketFrame> {
+public class WebSocketFrameHandler extends SimpleChannelInboundHandler<WebSocketFrame> implements MessageHandler {
 
   @Override
   public void channelActive(ChannelHandlerContext ctx) throws Exception {
@@ -27,13 +26,10 @@ public class WebSocketFrameHandler extends SimpleChannelInboundHandler<WebSocket
   }
 
   @Override
-  protected void channelRead0(ChannelHandlerContext ctx, WebSocketFrame frame) throws Exception {
+  protected void channelRead0(ChannelHandlerContext ctx, WebSocketFrame frame) {
     // ping and pong frames already handled
-
     if (frame instanceof TextWebSocketFrame) {
-      // Send the uppercase string back.
-      String request = ((TextWebSocketFrame) frame).text();
-      ctx.channel().writeAndFlush(new TextWebSocketFrame(request.toUpperCase(Locale.US)));
+      readMessage(ctx, (TextWebSocketFrame) frame);
     } else {
       String message = "unsupported frame type: " + frame.getClass().getName();
       throw new UnsupportedOperationException(message);

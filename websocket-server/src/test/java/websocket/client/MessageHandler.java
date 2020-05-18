@@ -4,18 +4,20 @@ import io.netty.channel.*;
 import io.netty.handler.codec.http.FullHttpResponse;
 import io.netty.handler.codec.http.websocketx.*;
 import io.netty.util.CharsetUtil;
+import websocket.server.json.JsonSupport;
+import websocket.server.model.ResponseMsg;
 
 import java.util.function.Consumer;
 
-public class MessageHandler extends SimpleChannelInboundHandler<Object> {
+public class MessageHandler extends SimpleChannelInboundHandler<Object> implements JsonSupport {
 
-  private final WebSocketClientHandshaker handshaker;
-  private final Consumer<String> textMessageReader;
+  private final WebSocketClientHandshaker handShaker;
+  private final Consumer<ResponseMsg> messageReader;
   private ChannelPromise handshakeFuture;
 
-  public MessageHandler(WebSocketClientHandshaker handshaker, Consumer<String> textMessageReader) {
-    this.handshaker = handshaker;
-    this.textMessageReader = textMessageReader;
+  public MessageHandler(WebSocketClientHandshaker handShaker, Consumer<ResponseMsg> messageReader) {
+    this.handShaker = handShaker;
+    this.messageReader = messageReader;
   }
 
   public ChannelFuture handshakeFuture() {
@@ -29,7 +31,7 @@ public class MessageHandler extends SimpleChannelInboundHandler<Object> {
 
   @Override
   public void channelActive(ChannelHandlerContext ctx) {
-    handshaker.handshake(ctx.channel());
+    handShaker.handshake(ctx.channel());
   }
 
   @Override
@@ -38,11 +40,11 @@ public class MessageHandler extends SimpleChannelInboundHandler<Object> {
   }
 
   @Override
-  public void channelRead0(ChannelHandlerContext ctx, Object msg) throws Exception {
+  public void channelRead0(ChannelHandlerContext ctx, Object msg) {
     Channel ch = ctx.channel();
-    if (!handshaker.isHandshakeComplete()) {
+    if (!handShaker.isHandshakeComplete()) {
       try {
-        handshaker.finishHandshake(ch, (FullHttpResponse) msg);
+        handShaker.finishHandshake(ch, (FullHttpResponse) msg);
         System.out.println("WebSocket Client connected!");
         handshakeFuture.setSuccess();
       } catch (WebSocketHandshakeException e) {
@@ -64,7 +66,8 @@ public class MessageHandler extends SimpleChannelInboundHandler<Object> {
       TextWebSocketFrame textFrame = (TextWebSocketFrame) frame;
       String text = textFrame.text();
       System.out.println("WebSocket Client received message: " + text);
-      textMessageReader.accept(text);
+      ResponseMsg response = fromJson(text, ResponseMsg.class);
+      messageReader.accept(response);
     } else if (frame instanceof PongWebSocketFrame) {
       System.out.println("WebSocket Client received pong");
     } else if (frame instanceof CloseWebSocketFrame) {

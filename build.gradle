@@ -10,6 +10,7 @@ subprojects {
 	buildscript {
 		ext {
 			lombokVersion = '1.18.12'
+			jacksonVersion = '2.11.0'
 		}
 
 		repositories {
@@ -37,6 +38,11 @@ subprojects {
 	dependencies {
 		compileOnly "org.projectlombok:lombok:${lombokVersion}"
 		annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
+
+		// JSON Support
+		implementation "com.fasterxml.jackson.core:jackson-databind:${jacksonVersion}"
+		implementation "com.fasterxml.jackson.datatype:jackson-datatype-jdk8:${jacksonVersion}"
+		implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:${jacksonVersion}"
 	}
 
 }
