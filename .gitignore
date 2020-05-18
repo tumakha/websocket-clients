@@ -2,7 +2,6 @@
 # Edit at https://www.gitignore.io/?templates=java,gradle,eclipse,intellij
 
 # Reports
-websocket-time-on-server.csv
 websocket-clients-performance.csv
 
 ### Eclipse ###
