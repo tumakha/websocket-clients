@@ -31,9 +31,9 @@ public class PerformanceBenchmark implements CommandLineRunner {
   public void run(String... args) {
     try {
       try (CsvWriter writer = new CsvWriter(REPORT_FILENAME, HEADER)) {
-        testClient(new Java11WebSocketClient(), writer);
+        // testClient(new Java11WebSocketClient(), writer);
         testClient(new NettyWebSocketClient(), writer);
-        testClient(new SpringWebSocketClient(), writer);
+        // testClient(new SpringWebSocketClient(), writer);
       }
     } catch (Exception e) {
       log.error("Test failed", e);
