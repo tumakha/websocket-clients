@@ -15,8 +15,6 @@ Java 13+, Gradle 6 or gradle-wrapper
 #### Run WebSocket server
 
     java -jar ./websocket-server/build/libs/websocket-server.jar
-    
-Report will be saved as `websocket-time-on-server.csv`
 
 #### Run clients test
 
