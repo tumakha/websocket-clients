@@ -58,9 +58,6 @@ public abstract class InsecureSslContext {
   private static SSLContext insecureSSLContext() {
     SSLContext sslContext = SSLContext.getInstance("TLS");
     sslContext.init(null, new TrustManager[]{ACCEPT_ALL_CERTIFICATES}, new SecureRandom());
-
-//    HttpsURLConnection.setDefaultSSLSocketFactory(sslContext.getSocketFactory());
-//    HttpsURLConnection.setDefaultHostnameVerifier((hostname, session) -> true);
     return sslContext;
   }
 
