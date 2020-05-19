@@ -26,9 +26,4 @@ public class SpringWebSocketClient implements WebSocketClient {
 
   }
 
-  @Override
-  public void waitSocketClosed() throws InterruptedException {
-
-  }
-
 }

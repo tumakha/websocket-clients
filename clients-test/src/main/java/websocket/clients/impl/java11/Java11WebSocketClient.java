@@ -24,9 +24,4 @@ public class Java11WebSocketClient implements WebSocketClient {
 
   }
 
-  @Override
-  public void waitSocketClosed() throws InterruptedException {
-
-  }
-
 }

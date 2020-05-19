@@ -2,7 +2,6 @@ package websocket.server;
 
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
-import io.netty.handler.codec.http.websocketx.CloseWebSocketFrame;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import lombok.SneakyThrows;
 import websocket.server.json.JsonSupport;
@@ -37,7 +36,6 @@ public interface MessageHandler extends JsonSupport {
         String response = toJson(new ResponseMsg(msgId, System.nanoTime()));
         channel.writeAndFlush(new TextWebSocketFrame(response));
       } else {
-        channel.writeAndFlush(new CloseWebSocketFrame());
         scheduledExecutor.shutdown();
       }
     }, 0, 100, MICROSECONDS); // run every 100 us

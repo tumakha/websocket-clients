@@ -50,7 +50,7 @@ public interface WebSocketServerIndexPage {
             '}' + NEWLINE +
             "</script>" + NEWLINE +
             "<form onsubmit=\"return false;\">" + NEWLINE +
-            "<input type=\"text\" name=\"message\" value=\"Hello, World!\"/>" +
+            "<input type=\"text\" name=\"message\" value=\"{\"request-messages\":10}\"/>" +
             "<input type=\"button\" value=\"Send Web Socket Data\"" + NEWLINE +
             "       onclick=\"send(this.form.message.value)\" />" + NEWLINE +
             "<h3>Output</h3>" + NEWLINE +

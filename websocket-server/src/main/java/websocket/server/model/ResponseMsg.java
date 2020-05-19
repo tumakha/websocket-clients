@@ -12,5 +12,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class ResponseMsg {
   int id;
-  long time;
+  long sentTime;
 }
