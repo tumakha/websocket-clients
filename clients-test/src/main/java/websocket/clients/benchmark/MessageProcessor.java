@@ -89,17 +89,14 @@ public class MessageProcessor implements JsonSupport {
     double minMicro = min / NANO_TO_MICRO;
     double maxMicro = max / NANO_TO_MICRO;
 
-    System.out.println("90% - " + top10percent.size());
     double max90Micro = top10percent.element() / NANO_TO_MICRO;
 
-    rangeClosed(1, top10percent.size() * 9 / 10).forEach(i -> top10percent.remove());
+    rangeClosed(1, top10percent.size() * 9 / 10).forEach(i -> top10percent.remove()); // remove 90% of queue
 
-    System.out.println("99% - " + top10percent.size());
     double max99Micro = top10percent.element() / NANO_TO_MICRO;
 
-    rangeClosed(1, top10percent.size() * 9 / 10).forEach(i -> top10percent.remove());
+    rangeClosed(1, top10percent.size() * 9 / 10).forEach(i -> top10percent.remove()); // remove 90% of queue
 
-    System.out.println("99.9% - " + top10percent.size());
     double max99dot9Micro = top10percent.element() / NANO_TO_MICRO;
 
     System.out.println(format("%s %d messages in %d us = Average time per message: %d us. " +
