@@ -51,7 +51,7 @@ public class MessageProcessor implements JsonSupport {
 
   @SneakyThrows
   public void waitLastMessageReceived() {
-    lastMessageReceived.get(30, SECONDS);
+    lastMessageReceived.get(180, SECONDS);
   }
 
   public TimeStats getStats(String clientName) {
