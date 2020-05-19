@@ -25,9 +25,6 @@ public class Java11WebSocketClient implements WebSocketClient {
 
   private static final Duration TIMEOUT = ofSeconds(10);
 
-  private SslContext sslContext = SslContextBuilder.forClient()
-      .trustManager(InsecureTrustManagerFactory.INSTANCE).build();
-
   private final HttpClient httpClient = HttpClient.newBuilder()
       .version(HttpClient.Version.HTTP_2)
       .sslContext(InsecureSslContext.SSL_CONTEXT)
@@ -36,9 +33,6 @@ public class Java11WebSocketClient implements WebSocketClient {
       .build();
 
   private WebSocket webSocket;
-
-  public Java11WebSocketClient() throws NoSuchAlgorithmException, SSLException, KeyManagementException {
-  }
 
   @Override
   public String getName() {
