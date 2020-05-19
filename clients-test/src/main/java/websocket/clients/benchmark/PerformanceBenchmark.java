@@ -24,7 +24,7 @@ public class PerformanceBenchmark implements CommandLineRunner {
   private static final int MESSAGES_COUNT = 100_000;
   // private static final int MESSAGES_COUNT = 1_000_000;
   private static final String REPORT_FILENAME = "websocket-clients-performance.csv";
-  private static final String HEADER = "WebSocket Client,Requests,Total duration,Time per request,Min,Avg,Max";
+  private static final String HEADER = "WebSocket Client,Messages,Total duration,Time per message,Min,Avg,Max";
   private static final AtomicInteger I = new AtomicInteger();
 
   @Override

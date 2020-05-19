@@ -56,10 +56,10 @@ public class MessageProcessor implements JsonSupport {
 
   public TimeStats getStats(String clientName) {
     long totalTimeMicro = (endTestTime - startTestTime) / (long) NANO_TO_MICRO;
-
     long avgPerRequestMicro = totalTimeMicro / messagesCount;
 
-    List<Long> clientTime = new ArrayList<>(messagesCount);
+    long min = Long.MAX_VALUE, max = 0;
+    double avg = 0;
     for (int id = 1; id <= messagesCount; id++) {
       Assert.notNull(message[id], format("Message #%d wasn't received", id));
       Assert.isTrue(receivedTime[id] != 0, format("Received time #%d wasn't saved", id));
@@ -67,17 +67,21 @@ public class MessageProcessor implements JsonSupport {
       ResponseMsg msg = fromJson(message[id], ResponseMsg.class);
       Assert.isTrue(msg.getId() == id, format("Message #%d should have id = %d", id, msg.getId()));
 
-      clientTime.add(receivedTime[id] - msg.getSentTime());
+      long time = receivedTime[id] - msg.getSentTime();
+
+      min = Math.min(time, min);
+      max = Math.max(time, max);
+      avg = avg + (time - avg) / id;
     }
 
-    double avg = clientTime.stream().mapToLong(l -> l).average().orElse(0) / NANO_TO_MICRO;
-    double min = clientTime.stream().mapToLong(l -> l).min().orElse(0) / NANO_TO_MICRO;
-    double max = clientTime.stream().mapToLong(l -> l).max().orElse(0) / NANO_TO_MICRO;
+    double avgMicro = avg / NANO_TO_MICRO;
+    double minMicro = min / NANO_TO_MICRO;
+    double maxMicro = max / NANO_TO_MICRO;
 
     System.out.println(format("%s %d messages in %d us = Average time per request: %d us. " +
             "Request time (us): min = %.3f, avg = %.3f, max = %.3f",
-        clientName, messagesCount, totalTimeMicro, avgPerRequestMicro, min, avg, max));
-    return new TimeStats(totalTimeMicro, avgPerRequestMicro, min, avg, max);
+        clientName, messagesCount, totalTimeMicro, avgPerRequestMicro, minMicro, avgMicro, maxMicro));
+    return new TimeStats(totalTimeMicro, avgPerRequestMicro, minMicro, avgMicro, maxMicro);
   }
 
 }
