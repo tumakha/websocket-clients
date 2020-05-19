@@ -1,6 +1,7 @@
 package websocket.clients.benchmark;
 
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.Assert;
 import websocket.clients.benchmark.model.TimeStats;
 import websocket.server.json.JsonSupport;
@@ -17,6 +18,7 @@ import static java.util.stream.IntStream.rangeClosed;
 /**
  * @author Yuriy Tumakha
  */
+@Slf4j
 public class MessageProcessor implements JsonSupport {
 
   private static final double NANO_TO_MICRO = 1e3; // ns to us
@@ -46,6 +48,7 @@ public class MessageProcessor implements JsonSupport {
     receivedTime[msgId] = System.nanoTime();
     if (msgId == messagesCount) {
       endTestTime = System.nanoTime();
+      log.info("Last message received");
       lastMessageReceived.complete(null);
     }
   }
