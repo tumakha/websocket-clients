@@ -100,7 +100,7 @@ public class NettyWebSocketClient implements WebSocketClient {
         });
 
     channel = b.connect(uri.getHost(), port).sync().channel();
-    handler.handshakeFuture().sync();
+    handler.handshakeFuture().sync(); // wait client connected
   }
 
   @Override

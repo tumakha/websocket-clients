@@ -22,7 +22,7 @@ public class PerformanceBenchmark implements CommandLineRunner {
 
   private static final String SERVER_ENDPOINT = "wss://127.0.0.1:8883/websocket";
   private static final int MESSAGES_COUNT = 100_000;
-  // private static final int MESSAGES_COUNT = 1_000_000;
+  //private static final int MESSAGES_COUNT = 1_000_000;
   private static final String REPORT_FILENAME = "websocket-clients-performance.csv";
   private static final String HEADER = "WebSocket Client,Messages,Total duration,Time per message,Min,Avg,Max,90%,99%,99.9%";
   private static final AtomicInteger I = new AtomicInteger();
@@ -34,7 +34,7 @@ public class PerformanceBenchmark implements CommandLineRunner {
   public void run(String... args) {
     try {
       try (CsvWriter writer = new CsvWriter(REPORT_FILENAME, HEADER)) {
-        // testClient(new Java11WebSocketClient(), writer);
+        testClient(new Java11WebSocketClient(), writer);
         testClient(new NettyWebSocketClient(), writer);
         // testClient(new SpringWebSocketClient(), writer);
       }
