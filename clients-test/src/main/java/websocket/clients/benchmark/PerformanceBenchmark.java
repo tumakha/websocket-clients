@@ -24,7 +24,7 @@ public class PerformanceBenchmark implements CommandLineRunner {
   private static final int MESSAGES_COUNT = 100_000;
   // private static final int MESSAGES_COUNT = 1_000_000;
   private static final String REPORT_FILENAME = "websocket-clients-performance.csv";
-  private static final String HEADER = "WebSocket Client,Messages,Total duration,Time per message,Min,Avg,Max";
+  private static final String HEADER = "WebSocket Client,Messages,Total duration,Time per message,Min,Avg,Max,90%,99%,99.9%";
   private static final AtomicInteger I = new AtomicInteger();
 
   @Override
@@ -47,10 +47,11 @@ public class PerformanceBenchmark implements CommandLineRunner {
 
     TimeStats stats = new ClientTestRun(wsClient, SERVER_ENDPOINT, MESSAGES_COUNT).run();
 
-    reportWriter.println(format("%s,%d,%d,%d,%.3f,%.3f,%.3f",
+    reportWriter.println(format("%s,%d,%d,%d,%.3f,%.3f,%.3f,%.3f,%.3f,%.3f",
         wsClient.getName(), MESSAGES_COUNT,
         stats.getTotalTime(), stats.getTimePerRequest(),
-        stats.getMin(), stats.getAvg(), stats.getMax()));
+        stats.getMin(), stats.getAvg(), stats.getMax(),
+        stats.getMax90(), stats.getMax99(), stats.getMax99dot9()));
   }
 
 }

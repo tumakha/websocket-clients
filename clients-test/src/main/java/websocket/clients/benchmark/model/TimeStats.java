@@ -12,4 +12,7 @@ public class TimeStats {
   double min;
   double avg;
   double max;
+  double max90;
+  double max99;
+  double max99dot9;
 }

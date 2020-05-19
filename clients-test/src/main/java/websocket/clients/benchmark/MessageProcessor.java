@@ -6,12 +6,13 @@ import websocket.clients.benchmark.model.TimeStats;
 import websocket.server.json.JsonSupport;
 import websocket.server.model.ResponseMsg;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.PriorityQueue;
+import java.util.Queue;
 import java.util.concurrent.CompletableFuture;
 
 import static java.lang.String.format;
 import static java.util.concurrent.TimeUnit.SECONDS;
+import static java.util.stream.IntStream.rangeClosed;
 
 /**
  * @author Yuriy Tumakha
@@ -60,6 +61,9 @@ public class MessageProcessor implements JsonSupport {
 
     long min = Long.MAX_VALUE, max = 0;
     double avg = 0;
+    int topQueueSize = messagesCount / 10;
+    Queue<Long> top10percent = new PriorityQueue<>(topQueueSize);
+
     for (int id = 1; id <= messagesCount; id++) {
       Assert.notNull(message[id], format("Message #%d wasn't received", id));
       Assert.isTrue(receivedTime[id] != 0, format("Received time #%d wasn't saved", id));
@@ -72,16 +76,39 @@ public class MessageProcessor implements JsonSupport {
       min = Math.min(time, min);
       max = Math.max(time, max);
       avg = avg + (time - avg) / id;
+
+      if (top10percent.size() < topQueueSize) {
+        top10percent.add(time);
+      } else if (top10percent.element() < time) {
+        top10percent.remove();
+        top10percent.add(time);
+      }
     }
 
     double avgMicro = avg / NANO_TO_MICRO;
     double minMicro = min / NANO_TO_MICRO;
     double maxMicro = max / NANO_TO_MICRO;
 
-    System.out.println(format("%s %d messages in %d us = Average time per request: %d us. " +
-            "Request time (us): min = %.3f, avg = %.3f, max = %.3f",
-        clientName, messagesCount, totalTimeMicro, avgPerRequestMicro, minMicro, avgMicro, maxMicro));
-    return new TimeStats(totalTimeMicro, avgPerRequestMicro, minMicro, avgMicro, maxMicro);
+    System.out.println("90% - " + top10percent.size());
+    double max90Micro = top10percent.element() / NANO_TO_MICRO;
+
+    rangeClosed(1, top10percent.size() * 9 / 10).forEach(i -> top10percent.remove());
+
+    System.out.println("99% - " + top10percent.size());
+    double max99Micro = top10percent.element() / NANO_TO_MICRO;
+
+    rangeClosed(1, top10percent.size() * 9 / 10).forEach(i -> top10percent.remove());
+
+    System.out.println("99.9% - " + top10percent.size());
+    double max99dot9Micro = top10percent.element() / NANO_TO_MICRO;
+
+    System.out.println(format("%s %d messages in %d us = Average time per message: %d us. " +
+            "Message time (us): min = %.3f, avg = %.3f, max = %.3f, 90%% = %.3f, 99%% = %.3f, 99.9%% = %.3f",
+        clientName, messagesCount, totalTimeMicro, avgPerRequestMicro, minMicro, avgMicro, maxMicro,
+        max90Micro, max99Micro, max99dot9Micro));
+    return new TimeStats(totalTimeMicro, avgPerRequestMicro,
+        minMicro, avgMicro, maxMicro,
+        max90Micro, max99Micro, max99dot9Micro);
   }
 
 }
