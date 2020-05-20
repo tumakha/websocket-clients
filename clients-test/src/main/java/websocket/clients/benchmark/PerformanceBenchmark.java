@@ -27,7 +27,7 @@ public class PerformanceBenchmark implements CommandLineRunner {
   private static final String HEADER = "WebSocket Client,Messages,Total duration,Time per message,Min,Avg,Max,90%,99%,99.9%";
   private static final AtomicInteger I = new AtomicInteger();
 
-  private static final String MAGENTA_CONSOLE = "\u001b[35m";
+  private static final String GREEN_CONSOLE = "\u001b[32;1m";
   private static final String RESET_CONSOLE = "\u001b[0m";
 
   @Override
@@ -46,7 +46,7 @@ public class PerformanceBenchmark implements CommandLineRunner {
   }
 
   private void testClient(WebSocketClient wsClient, CsvWriter reportWriter) throws Exception {
-    System.out.println(MAGENTA_CONSOLE + I.incrementAndGet() + ". " + wsClient.getName() + RESET_CONSOLE);
+    System.out.println(GREEN_CONSOLE + I.incrementAndGet() + ". " + wsClient.getName() + RESET_CONSOLE);
 
     TimeStats stats = new ClientTestRun(wsClient, SERVER_ENDPOINT, MESSAGES_COUNT).run();
 
