@@ -6,11 +6,11 @@ import io.netty.handler.ssl.util.InsecureTrustManagerFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.reactive.socket.WebSocketMessage;
 import org.springframework.web.reactive.socket.client.ReactorNettyWebSocketClient;
+import org.springframework.web.reactive.socket.client.WebSocketClient;
 import reactor.core.Disposable;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.netty.http.client.HttpClient;
-import websocket.clients.WebSocketClient;
 
 import javax.net.ssl.SSLException;
 import java.net.URI;
@@ -25,7 +25,7 @@ import static java.time.Duration.ofSeconds;
  * @author Yuriy Tumakha
  */
 @Slf4j
-public class SpringWebSocketClient implements WebSocketClient {
+public class SpringWebSocketClient implements websocket.clients.WebSocketClient {
 
   private static final Duration TIMEOUT = ofSeconds(10);
   private String endpoint;
@@ -36,8 +36,7 @@ public class SpringWebSocketClient implements WebSocketClient {
 
   private final HttpClient httpClient = HttpClient.create().secure(ssl -> ssl.sslContext(sslContext));
 
-  private final org.springframework.web.reactive.socket.client.WebSocketClient client =
-      new ReactorNettyWebSocketClient(httpClient);
+  private final WebSocketClient client = new ReactorNettyWebSocketClient(httpClient);
 
   private Disposable executeDisposable;
 
