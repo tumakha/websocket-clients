@@ -49,7 +49,7 @@ public class Java11WebSocketClient implements WebSocketClient {
 
   @Override
   public void close() {
-    webSocket.sendClose(WebSocket.NORMAL_CLOSURE, "ok");
+    webSocket.sendClose(WebSocket.NORMAL_CLOSURE, "OK");
   }
 
 }

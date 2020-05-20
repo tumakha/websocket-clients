@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 import websocket.clients.WebSocketClient;
 import websocket.clients.benchmark.model.TimeStats;
 import websocket.clients.impl.java11.Java11WebSocketClient;
+import websocket.clients.impl.jetty.JettyWebSocketClient;
 import websocket.clients.impl.netty.NettyWebSocketClient;
 import websocket.clients.impl.spring.SpringWebSocketClient;
 
@@ -37,6 +38,7 @@ public class PerformanceBenchmark implements CommandLineRunner {
         testClient(new Java11WebSocketClient(), writer);
         testClient(new NettyWebSocketClient(), writer);
         testClient(new SpringWebSocketClient(), writer);
+        testClient(new JettyWebSocketClient(), writer);
       }
     } catch (Exception e) {
       log.error("Test failed", e);
