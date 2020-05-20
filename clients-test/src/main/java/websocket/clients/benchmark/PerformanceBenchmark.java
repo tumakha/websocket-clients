@@ -46,7 +46,7 @@ public class PerformanceBenchmark implements CommandLineRunner {
   }
 
   private void testClient(WebSocketClient wsClient, CsvWriter reportWriter) throws Exception {
-    System.out.println(GREEN_CONSOLE + I.incrementAndGet() + ". " + wsClient.getName() + RESET_CONSOLE);
+    System.out.println("\n" + GREEN_CONSOLE + I.incrementAndGet() + ". " + wsClient.getName() + RESET_CONSOLE);
 
     TimeStats stats = new ClientTestRun(wsClient, SERVER_ENDPOINT, MESSAGES_COUNT).run();
 
