@@ -8,6 +8,7 @@ import websocket.clients.benchmark.model.TimeStats;
 import websocket.clients.impl.akka.AkkaWebSocketClient;
 import websocket.clients.impl.asynchttpclient.AsyncHttpWebSocketClient;
 import websocket.clients.impl.java11.Java11WebSocketClient;
+import websocket.clients.impl.javawebsocket.JavaWebSocketClient;
 import websocket.clients.impl.jetty.JettyWebSocketClient;
 import websocket.clients.impl.netty.NettyWebSocketClient;
 import websocket.clients.impl.spring.SpringWebSocketClient;
@@ -37,12 +38,13 @@ public class PerformanceBenchmark implements CommandLineRunner {
   public void run(String... args) {
     try {
       try (CsvWriter writer = new CsvWriter(REPORT_FILENAME, HEADER)) {
-//        testClient(new Java11WebSocketClient(), writer);
-//        testClient(new NettyWebSocketClient(), writer);
-//        testClient(new SpringWebSocketClient(), writer);
-//        testClient(new JettyWebSocketClient(), writer);
-//        testClient(new AkkaWebSocketClient(), writer);
+        testClient(new Java11WebSocketClient(), writer);
+        testClient(new NettyWebSocketClient(), writer);
+        testClient(new SpringWebSocketClient(), writer);
+        testClient(new JettyWebSocketClient(), writer);
+        testClient(new AkkaWebSocketClient(), writer);
         testClient(new AsyncHttpWebSocketClient(), writer);
+        testClient(new JavaWebSocketClient(), writer);
       }
     } catch (Exception e) {
       log.error("Test failed", e);

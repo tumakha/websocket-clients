@@ -23,6 +23,7 @@ dependencies {
 	implementation 'com.typesafe.akka:akka-stream_2.13:2.6.5'
 
 	implementation 'org.asynchttpclient:async-http-client:2.12.1' // AsyncHttpClient
+	implementation 'org.java-websocket:Java-WebSocket:1.5.1' // Java-WebSocket
 
 	// Spring Boot
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
