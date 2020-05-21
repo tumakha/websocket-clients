@@ -21,8 +21,6 @@ import static java.util.concurrent.TimeUnit.SECONDS;
  */
 public class JettyWebSocketClient implements websocket.clients.WebSocketClient {
 
-  private static final Duration TIMEOUT = ofSeconds(10);
-
   private final HttpClient http;
   private final WebSocketClient client;
   private Session session;
@@ -50,7 +48,7 @@ public class JettyWebSocketClient implements websocket.clients.WebSocketClient {
     SocketHandler socket = new SocketHandler(messageReader);
     ClientUpgradeRequest request = new ClientUpgradeRequest();
     Future<Session> sessionFuture = client.connect(socket, uri, request);
-    session = sessionFuture.get(TIMEOUT.getSeconds(), SECONDS); // wait client connected
+    session = sessionFuture.get(CONNECTION_TIMEOUT.getSeconds(), SECONDS); // wait client connected
   }
 
   @Override

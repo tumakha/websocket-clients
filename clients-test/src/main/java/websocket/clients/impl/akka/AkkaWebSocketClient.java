@@ -17,10 +17,12 @@ import websocket.clients.impl.java11.InsecureSslContext;
 
 import java.util.Optional;
 import java.util.concurrent.CompletionStage;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.SubmissionPublisher;
+import java.util.concurrent.TimeoutException;
 import java.util.function.Consumer;
 
-import static java.util.concurrent.Executors.newSingleThreadExecutor;
+import static java.util.concurrent.TimeUnit.SECONDS;
 
 /**
  * @author Yuriy Tumakha
@@ -31,7 +33,7 @@ public class AkkaWebSocketClient implements WebSocketClient {
     private final Http http = Http.get(system);
     private final ConnectionContext connectionContext = ConnectionContext.https(InsecureSslContext.SSL_CONTEXT);
     private final ClientConnectionSettings connectionSettings = ClientConnectionSettings.create(system);
-    private final SubmissionPublisher<String> msgPublisher = new SubmissionPublisher<>(newSingleThreadExecutor(), 2);
+    private final SubmissionPublisher<String> msgPublisher = new SubmissionPublisher<>();
 
     private String endpoint;
     private Consumer<String> messageReader;
@@ -42,7 +44,7 @@ public class AkkaWebSocketClient implements WebSocketClient {
     }
 
     @Override
-    public void connect(String endpoint, Consumer<String> messageReader) {
+    public void connect(String endpoint, Consumer<String> messageReader) throws InterruptedException, ExecutionException, TimeoutException {
         this.endpoint = endpoint;
         this.messageReader = messageReader;
 
@@ -78,11 +80,13 @@ public class AkkaWebSocketClient implements WebSocketClient {
         });
 
         connected.thenAccept(done -> System.out.println("Connected"));
+        connected.toCompletableFuture().get(CONNECTION_TIMEOUT.getSeconds(), SECONDS); // wait client connected
     }
 
     @Override
     public void sendMessage(String text) {
         msgPublisher.submit(text);
+        System.out.println("Sent message: " + text);
     }
 
     @Override

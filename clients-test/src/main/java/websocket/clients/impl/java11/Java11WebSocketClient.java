@@ -17,13 +17,11 @@ import static java.util.concurrent.TimeUnit.SECONDS;
  */
 public class Java11WebSocketClient implements WebSocketClient {
 
-  private static final Duration TIMEOUT = ofSeconds(10);
-
   private final HttpClient httpClient = HttpClient.newBuilder()
       .version(HttpClient.Version.HTTP_2)
       .sslContext(InsecureSslContext.SSL_CONTEXT)
       .followRedirects(HttpClient.Redirect.NORMAL)
-      .connectTimeout(TIMEOUT)
+      .connectTimeout(CONNECTION_TIMEOUT)
       .build();
 
   private WebSocket webSocket;
@@ -36,10 +34,10 @@ public class Java11WebSocketClient implements WebSocketClient {
   @Override
   public void connect(String endpoint, Consumer<String> messageReader) throws Exception {
     CompletableFuture<WebSocket> wsCompletableFuture = httpClient.newWebSocketBuilder()
-        .connectTimeout(TIMEOUT)
+        .connectTimeout(CONNECTION_TIMEOUT)
         .buildAsync(URI.create(endpoint), new SocketListener(messageReader));
 
-    webSocket = wsCompletableFuture.get(TIMEOUT.getSeconds(), SECONDS); // wait client connected
+    webSocket = wsCompletableFuture.get(CONNECTION_TIMEOUT.getSeconds(), SECONDS); // wait client connected
   }
 
   @Override
