@@ -36,7 +36,6 @@ public class JavaWebSocketClient implements websocket.clients.WebSocketClient {
             @Override
             public void onClose(int code, String reason, boolean remote) {
                 log.info("Connection closed by {}: {} {}", (remote ? "server" : "client"), code, reason);
-                //client.close();
             }
 
             @Override
