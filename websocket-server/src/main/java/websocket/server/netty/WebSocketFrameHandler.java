@@ -29,7 +29,7 @@ public class WebSocketFrameHandler extends SimpleChannelInboundHandler<WebSocket
   protected void channelRead0(ChannelHandlerContext ctx, WebSocketFrame frame) {
     // ping and pong frames already handled
     if (frame instanceof TextWebSocketFrame) {
-      readMessage(ctx, (TextWebSocketFrame) frame);
+      readMessage(ctx, ((TextWebSocketFrame) frame).text());
     } else {
       String message = "unsupported frame type: " + frame.getClass().getName();
       throw new UnsupportedOperationException(message);

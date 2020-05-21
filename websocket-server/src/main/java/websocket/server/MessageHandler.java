@@ -20,10 +20,9 @@ import static java.util.concurrent.TimeUnit.MICROSECONDS;
 public interface MessageHandler extends JsonSupport {
 
   @SneakyThrows
-  default void readMessage(ChannelHandlerContext ctx, TextWebSocketFrame textFrame) {
-    String request = textFrame.text();
-    System.out.println("New Test Request: " + request);
-    RequestMsg requestMsg = fromJson(request, RequestMsg.class);
+  default void readMessage(ChannelHandlerContext ctx, String msg) {
+    System.out.println("New Test Request: " + msg);
+    RequestMsg requestMsg = fromJson(msg, RequestMsg.class);
 
     final ScheduledExecutorService scheduledExecutor = Executors.newScheduledThreadPool(1);
     final AtomicInteger messageId = new AtomicInteger();
