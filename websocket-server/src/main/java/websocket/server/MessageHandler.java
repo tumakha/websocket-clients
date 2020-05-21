@@ -2,6 +2,7 @@ package websocket.server;
 
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.socket.SocketChannelConfig;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import lombok.SneakyThrows;
 import websocket.server.json.JsonSupport;
@@ -28,6 +29,8 @@ public interface MessageHandler extends JsonSupport {
     final AtomicInteger messageId = new AtomicInteger();
     final int count = requestMsg.getRequestMessages();
     final Channel channel = ctx.channel();
+    final SocketChannelConfig config = (SocketChannelConfig) channel.config();
+    System.out.println("TCP_NODELAY: " + config.isTcpNoDelay());
 
     scheduledExecutor.scheduleAtFixedRate(() -> {
       int msgId = messageId.incrementAndGet();
@@ -37,7 +40,7 @@ public interface MessageHandler extends JsonSupport {
       } else {
         scheduledExecutor.shutdown();
       }
-    }, 0, 100, MICROSECONDS); // run every 100 us
+    }, 0, 300, MICROSECONDS); // run every 300 us
   }
 
 }
