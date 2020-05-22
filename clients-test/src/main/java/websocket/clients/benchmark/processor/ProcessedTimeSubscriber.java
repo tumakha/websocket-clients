@@ -17,6 +17,7 @@ import static java.util.stream.IntStream.rangeClosed;
  */
 public class ProcessedTimeSubscriber implements Flow.Subscriber<Long> {
 
+  private static final int SINGLE_TEST_TIMEOUT_SECONDS = 240;
   private static final double NANO_TO_MICRO = 1e3; // ns to us
 
   private Flow.Subscription subscription;
@@ -70,7 +71,7 @@ public class ProcessedTimeSubscriber implements Flow.Subscriber<Long> {
 
   @SneakyThrows
   public void waitLastMessageReceived() {
-    lastMessageReceived.get(180, SECONDS);
+    lastMessageReceived.get(SINGLE_TEST_TIMEOUT_SECONDS, SECONDS);
   }
 
   public TimeStats getTimeStats() {
