@@ -1,19 +1,19 @@
 package websocket.clients;
 
 import org.junit.jupiter.api.Test;
-import websocket.server.WebSocketServer;
+import websocket.server.NettyWebSocketServer;
+import static websocket.server.ServerMain.*;
 
 /**
  * @author Yuriy Tumakha
  */
 public class WebSocketClientsAppTest {
 
-  private static final boolean ENABLE_SSL = true;
   private static final int TEST_PORT = 8883;
 
   @Test
   public void testRunClientsTest() throws Exception {
-    try (WebSocketServer server = new WebSocketServer(ENABLE_SSL, TEST_PORT)) {
+    try (NettyWebSocketServer server = new NettyWebSocketServer(ENABLE_SSL, HOST, TEST_PORT, WEBSOCKET_PATH)) {
       server.startChannel();
 
       String endpoint = server.getEndpoint();

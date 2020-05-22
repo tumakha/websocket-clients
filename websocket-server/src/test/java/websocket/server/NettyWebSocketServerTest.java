@@ -14,21 +14,23 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.hamcrest.number.OrderingComparison.lessThan;
+import static websocket.server.ServerMain.*;
+import static websocket.server.ServerMain.ENABLE_SSL;
+import static websocket.server.ServerMain.HOST;
 
 /**
  * @author Yuriy Tumakha
  */
-public class WebSocketServerTest {
+public class NettyWebSocketServerTest {
 
-  private static final boolean ENABLE_SSL = true;
-  private static final int TEST_PORT = 8383;
+  private static final int TEST_PORT = 8882;
   private static final int MESSAGES_COUNT = 10;
 
   @Test
   public void testServer() throws Exception {
     List<ResponseMsg> messages = new ArrayList<>(MESSAGES_COUNT);
 
-    try (WebSocketServer server = new WebSocketServer(ENABLE_SSL, TEST_PORT)) {
+    try (NettyWebSocketServer server = new NettyWebSocketServer(ENABLE_SSL, HOST, TEST_PORT, WEBSOCKET_PATH)) {
       server.startChannel();
 
       String endpoint = server.getEndpoint();

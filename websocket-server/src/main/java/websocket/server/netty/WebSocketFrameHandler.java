@@ -4,14 +4,14 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import io.netty.handler.codec.http.websocketx.WebSocketFrame;
-import websocket.server.MessageHandler;
+import websocket.server.NettyMessageHandler;
 
 /**
  * Read socket frames.
  *
  * @author Yuriy Tumakha
  */
-public class WebSocketFrameHandler extends SimpleChannelInboundHandler<WebSocketFrame> implements MessageHandler {
+public class WebSocketFrameHandler extends SimpleChannelInboundHandler<WebSocketFrame> implements NettyMessageHandler {
 
   @Override
   public void channelActive(ChannelHandlerContext ctx) throws Exception {

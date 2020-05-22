@@ -14,7 +14,13 @@ Java 13+, Gradle 6 or gradle-wrapper
 
 #### Run WebSocket server
 
+run Java-WebSocket server
+
     java -jar ./websocket-server/build/libs/websocket-server.jar
+
+or run Netty server
+
+    java -jar ./websocket-server/build/libs/websocket-server.jar netty
 
 #### Run clients test
 

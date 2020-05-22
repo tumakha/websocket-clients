@@ -17,7 +17,7 @@ import io.netty.handler.codec.http.websocketx.extensions.compression.WebSocketCl
 import io.netty.handler.ssl.SslContext;
 import io.netty.handler.ssl.SslContextBuilder;
 import io.netty.handler.ssl.util.InsecureTrustManagerFactory;
-import websocket.server.WebSocketServer;
+import websocket.server.NettyWebSocketServer;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -28,7 +28,7 @@ import java.net.URI;
  * <p>
  * In order to run this example you need a compatible WebSocket server.
  * Therefore you can either start the WebSocket server from the examples
- * by running {@link WebSocketServer}
+ * by running {@link NettyWebSocketServer}
  * or connect to an existing WebSocket server such as
  * <a href="http://www.websocket.org/echo.html">ws://echo.websocket.org</a>.
  * <p>

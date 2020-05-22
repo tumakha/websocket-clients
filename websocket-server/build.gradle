@@ -2,7 +2,7 @@
 jar {
     archiveFileName = 'websocket-server.jar'
     manifest {
-        attributes "Main-Class": "websocket.server.WebSocketServer"
+        attributes "Main-Class": "websocket.server.ServerMain"
     }
     from {
         configurations.runtimeClasspath.findAll { it.name.endsWith('jar') }
@@ -11,7 +11,10 @@ jar {
 }
 
 dependencies {
-    implementation 'io.netty:netty-all:4.1.50.Final'
+    implementation 'io.netty:netty-all:4.1.50.Final' // Netty Server
+    implementation 'org.java-websocket:Java-WebSocket:1.5.1' // Java-WebSocket Server
+    implementation 'ch.qos.logback:logback-classic:1.2.3'
+
     testImplementation 'org.hamcrest:hamcrest:2.1'
     testImplementation 'junit:junit:4.13'
 }

@@ -1,5 +1,6 @@
 package websocket.clients.benchmark;
 
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
@@ -36,6 +37,7 @@ public class PerformanceBenchmark implements CommandLineRunner {
 
   @Override
   public void run(String... args) {
+    warmUp(new Java11WebSocketClient());
     try {
       try (CsvWriter writer = new CsvWriter(REPORT_FILENAME, HEADER)) {
         testClient(new Java11WebSocketClient(), writer);
@@ -51,6 +53,13 @@ public class PerformanceBenchmark implements CommandLineRunner {
       System.exit(1);
     }
     System.exit(0);
+  }
+
+  @SneakyThrows
+  private void warmUp(WebSocketClient wsClient) {
+    System.out.println("Warming up");
+
+    new ClientTestRun(wsClient, SERVER_ENDPOINT, MESSAGES_COUNT).run();
   }
 
   private void testClient(WebSocketClient wsClient, CsvWriter reportWriter) throws Exception {

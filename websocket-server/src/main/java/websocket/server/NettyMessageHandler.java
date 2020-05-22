@@ -18,12 +18,12 @@ import static java.util.concurrent.TimeUnit.MICROSECONDS;
 /**
  * @author Yuriy Tumakha
  */
-public interface MessageHandler extends JsonSupport {
+public interface NettyMessageHandler extends JsonSupport {
 
   @SneakyThrows
-  default void readMessage(ChannelHandlerContext ctx, String msg) {
-    System.out.println("New Test Request: " + msg);
-    RequestMsg requestMsg = fromJson(msg, RequestMsg.class);
+  default void readMessage(ChannelHandlerContext ctx, String message) {
+    System.out.println("New Test Request: " + message);
+    RequestMsg requestMsg = fromJson(message, RequestMsg.class);
 
     final ScheduledExecutorService scheduledExecutor = Executors.newScheduledThreadPool(1);
     final AtomicInteger messageId = new AtomicInteger();
@@ -40,7 +40,7 @@ public interface MessageHandler extends JsonSupport {
       } else {
         scheduledExecutor.shutdown();
       }
-    }, 0, 300, MICROSECONDS); // run every 300 us
+    }, 0, 200, MICROSECONDS); // run every 200 us
   }
 
 }
