@@ -3,6 +3,7 @@ package websocket.clients.benchmark;
 import lombok.Value;
 import websocket.clients.WebSocketClient;
 import websocket.clients.benchmark.model.TimeStats;
+import websocket.clients.benchmark.processor.MessageProcessor;
 import websocket.server.json.JsonSupport;
 import websocket.server.model.RequestMsg;
 

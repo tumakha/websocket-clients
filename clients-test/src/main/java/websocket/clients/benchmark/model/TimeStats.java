@@ -1,11 +1,13 @@
 package websocket.clients.benchmark.model;
 
-import lombok.Value;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 
 /**
  * @author Yuriy Tumakha
  */
-@Value
+@Data
+@AllArgsConstructor
 public class TimeStats {
   long totalTime;
   long timePerRequest;
