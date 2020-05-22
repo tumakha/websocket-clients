@@ -12,6 +12,7 @@ import websocket.clients.impl.java11.Java11WebSocketClient;
 import websocket.clients.impl.javawebsocket.JavaWebSocketClient;
 import websocket.clients.impl.jetty.JettyWebSocketClient;
 import websocket.clients.impl.netty.NettyWebSocketClient;
+import websocket.clients.impl.nv.NeoVisionariesWebSocketClient;
 import websocket.clients.impl.spring.SpringWebSocketClient;
 
 import java.util.concurrent.atomic.AtomicInteger;
@@ -38,6 +39,7 @@ public class PerformanceBenchmark implements CommandLineRunner {
   @Override
   public void run(String... args) {
     warmUp(new Java11WebSocketClient());
+
     try {
       try (CsvWriter writer = new CsvWriter(REPORT_FILENAME, HEADER)) {
         testClient(new Java11WebSocketClient(), writer);
@@ -47,6 +49,7 @@ public class PerformanceBenchmark implements CommandLineRunner {
         testClient(new AkkaWebSocketClient(), writer);
         testClient(new AsyncHttpWebSocketClient(), writer);
         testClient(new JavaWebSocketClient(), writer);
+        testClient(new NeoVisionariesWebSocketClient(), writer);
       }
     } catch (Exception e) {
       log.error("Test failed", e);
