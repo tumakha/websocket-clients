@@ -4,6 +4,7 @@ import lombok.Value;
 
 import lombok.extern.slf4j.Slf4j;
 import org.java_websocket.WebSocket;
+import org.java_websocket.WebSocketImpl;
 import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.DefaultSSLWebSocketServerFactory;
 import org.java_websocket.server.WebSocketServer;
@@ -36,13 +37,12 @@ public class JavaWebSocketServer implements JsonSupport {
 
             @Override
             public void onOpen(WebSocket conn, ClientHandshake handshake) {
-                log.info("New connection: {}", handshake.getResourceDescriptor());
-                log.info(conn.getRemoteSocketAddress().getAddress().getHostAddress() + " entered the room!");
+                log.info("New connection: {}", conn.getRemoteSocketAddress());
             }
 
             @Override
             public void onClose(WebSocket conn, int code, String reason, boolean remote) {
-                log.info("Closed connection {}", conn);
+                log.info("Closed connection {}", conn.getRemoteSocketAddress());
             }
 
             @Override
@@ -67,7 +67,7 @@ public class JavaWebSocketServer implements JsonSupport {
 
             @Override
             public void onError(WebSocket conn, Exception ex) {
-                log.error(conn + " socket error", ex);
+                log.error(conn.getRemoteSocketAddress() + " socket error", ex);
             }
 
             @Override
