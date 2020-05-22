@@ -1,8 +1,9 @@
 
 server.port: 8888
 
-spring:
-  main.banner-mode: 'OFF'
+spring.main:
+  banner-mode: 'OFF'
+  web-application-type: none
 
 management.endpoints.web.exposure.include:
   - health

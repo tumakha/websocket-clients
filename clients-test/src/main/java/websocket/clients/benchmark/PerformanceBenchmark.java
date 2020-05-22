@@ -13,7 +13,8 @@ import websocket.clients.impl.javawebsocket.JavaWebSocketClient;
 import websocket.clients.impl.jetty.JettyWebSocketClient;
 import websocket.clients.impl.netty.NettyWebSocketClient;
 import websocket.clients.impl.nv.NeoVisionariesWebSocketClient;
-import websocket.clients.impl.spring.SpringWebSocketClient;
+import websocket.clients.impl.spring.SpringReactorWebSocketClient;
+import websocket.clients.impl.spring.SpringStandardWebSocketClient;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -44,7 +45,8 @@ public class PerformanceBenchmark implements CommandLineRunner {
       try (CsvWriter writer = new CsvWriter(REPORT_FILENAME, HEADER)) {
         testClient(new Java11WebSocketClient(), writer);
         testClient(new NettyWebSocketClient(), writer);
-        testClient(new SpringWebSocketClient(), writer);
+        testClient(new SpringReactorWebSocketClient(), writer);
+        testClient(new SpringStandardWebSocketClient(), writer);
         testClient(new JettyWebSocketClient(), writer);
         testClient(new AkkaWebSocketClient(), writer);
         testClient(new AsyncHttpWebSocketClient(), writer);

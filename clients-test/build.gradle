@@ -16,6 +16,7 @@ dependencies {
 
 	implementation 'io.netty:netty-all:4.1.50.Final' // Netty
 	implementation 'org.springframework.boot:spring-boot-starter-webflux' // Spring ReactorNettyWebSocketClient
+	implementation 'org.springframework.boot:spring-boot-starter-websocket' // Spring StandardWebSocketClient
 	implementation 'org.eclipse.jetty.websocket:websocket-client:9.4.28.v20200408' // Jetty
 
 	// Akka HTTP

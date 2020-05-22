@@ -22,7 +22,7 @@ import java.util.function.Consumer;
  * @author Yuriy Tumakha
  */
 @Slf4j
-public class SpringWebSocketClient implements websocket.clients.WebSocketClient {
+public class SpringReactorWebSocketClient implements websocket.clients.WebSocketClient {
 
   private final WebSocketClient client;
 
@@ -30,7 +30,7 @@ public class SpringWebSocketClient implements websocket.clients.WebSocketClient 
   private Consumer<String> messageReader;
   private Disposable executeDisposable;
 
-  public SpringWebSocketClient() throws SSLException {
+  public SpringReactorWebSocketClient() throws SSLException {
     SslContext sslContext = SslContextBuilder.forClient()
         .trustManager(InsecureTrustManagerFactory.INSTANCE).build();
 
